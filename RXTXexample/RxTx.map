@@ -1,0 +1,70 @@
+MPLINK 4.48, Linker
+Linker Map File - Created Mon Feb 12 18:33:40 2024
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x0001ec
+      .config_2007_RXTX.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x0000f9      
+                            0x002007    0x002007      
+            248 out of 8454 program addresses used, program memory utilization is 2%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     BACK   0x000036    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                      ISR   0x00002c    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                  Number1   0x00008b    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+            Number1String   0x0000e4    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                  RECIVED   0x000098    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                 TIMERINT   0x00009f    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                 TRANSMIT   0x00009c    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                     inid   0x00005f    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     init   0x000005    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                     loop   0x000093    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                    loop1   0x000041    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    loopX   0x000046    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    onems   0x00003e    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                   pulseE   0x00004a    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     send   0x00004f    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    start   0x00007a    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+            welcomeString   0x0000ad    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                      xms   0x000045    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     init   0x000005    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                      ISR   0x00002c    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                     BACK   0x000036    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                    onems   0x00003e    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    loop1   0x000041    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                      xms   0x000045    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    loopX   0x000046    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                   pulseE   0x00004a    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     send   0x00004f    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     inid   0x00005f    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    start   0x00007a    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                  Number1   0x00008b    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                     loop   0x000093    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                  RECIVED   0x000098    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                 TRANSMIT   0x00009c    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+                 TIMERINT   0x00009f    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+            welcomeString   0x0000ad    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+            Number1String   0x0000e4    program     static D:\BZU\Real Time\RXTXexample\RxTx.asm
+
+

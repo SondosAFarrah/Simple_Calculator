@@ -1,0 +1,112 @@
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 23 : Labels must be defined in a code or data section when making an object file
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 24 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 25 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 26 : Labels must be defined in a code or data section when making an object file
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 26 : Executable code and data must be defined in an appropriate section
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 27 : Using default destination of 1 (file).
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 27 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 28 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 28 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 29 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 35 : Labels must be defined in a code or data section when making an object file
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 35 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 36 : Labels must be defined in a code or data section when making an object file
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 36 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 36 : Executable code and data must be defined in an appropriate section
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 37 : Using default destination of 1 (file).
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 37 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 38 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 38 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 39 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 41 : Labels must be defined in a code or data section when making an object file
+Warning[202] D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 41 : Argument out of range.  Least significant bits used.
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 41 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 42 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 43 : Labels must be defined in a code or data section when making an object file
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 43 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 43 : Executable code and data must be defined in an appropriate section
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 44 : Using default destination of 1 (file).
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 44 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 45 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 45 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 46 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 50 : Labels must be defined in a code or data section when making an object file
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 50 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 50 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 51 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 51 : Executable code and data must be defined in an appropriate section
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 52 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 52 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 53 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 53 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 54 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 60 : Labels must be defined in a code or data section when making an object file
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 60 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 61 : Executable code and data must be defined in an appropriate section
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 62 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 62 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 63 : Executable code and data must be defined in an appropriate section
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 64 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 64 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 65 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 65 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 66 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 66 : Executable code and data must be defined in an appropriate section
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 68 : Using default destination of 1 (file).
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 68 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 69 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 70 : Executable code and data must be defined in an appropriate section
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 71 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 71 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 72 : Executable code and data must be defined in an appropriate section
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 73 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 73 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 74 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 74 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 75 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 75 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 76 : Executable code and data must be defined in an appropriate section
+Error[150]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 82 : Labels must be defined in a code or data section when making an object file
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 82 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 83 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 83 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 84 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 85 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 87 : Executable code and data must be defined in an appropriate section
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 88 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 88 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 89 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 89 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 90 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 91 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 91 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 92 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 92 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 93 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 93 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 94 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 94 : Executable code and data must be defined in an appropriate section
+Error[113]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 95 : Symbol not previously defined (PORTD)
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 95 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 96 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 96 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 98 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 99 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 99 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 100 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 101 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 101 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 102 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 103 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 103 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 104 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 105 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 105 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 106 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 107 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 107 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 108 : Executable code and data must be defined in an appropriate section
+Error[151]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 109 : Operand contains unresolvable labels or is too complex
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 109 : Executable code and data must be defined in an appropriate section
+Error[152]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 111 : Executable code and data must be defined in an appropriate section
+Error[129]   D:\BZU\REAL TIME\RXTXEXAMPLE\LCDIS.INC 112 : Expected (END)
