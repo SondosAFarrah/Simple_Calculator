@@ -13,7 +13,7 @@ Char EQU 0x28
 tensTemp EQU 0x26
 onesTemp EQU 0x27 
 tensTemp2 EQU 0x24
-onesTemp2 EQU 0x25 
+onesTemp2 EQU 0x29 
 ;numberOneTens EQU 0x21
 ;numberOneOnes EQU 0x22
 ;numberTwoTens EQU 0x23
