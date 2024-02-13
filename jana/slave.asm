@@ -11,8 +11,10 @@ tenTimes EQU 0x27
 onesTimes EQU 0x28
 reciveTurn EQU 0x29
 onesTemp2 EQU 0x30
-Number1 EQU 0x31
-Number1H EQU 0x32
+CarryCount EQU 0x31
+ResultH EQU 0x32
+ResultL EQU 0x33
+onesTempT EQU 0x34
 ;NUM EQU 0x25
 
 ; The instructions should start from here
@@ -26,7 +28,10 @@ Number1H EQU 0x32
 
 ; The init for our program
 init:
-	CLRF Number1H
+	CLRF CarryCount
+	CLRF onesTempT
+	CLRF ResultH
+	CLRF ResultL 
 	CLRF reciveTurn
 	CLRF onesTemp2
 	CLRF tensTemp
@@ -129,8 +134,8 @@ RECIVED:
 	BTFSC reciveTurn,0
 	GOTO secondNumCame
 	BSF reciveTurn,0
-	MOVWF Number1 ; we store the value to multiplicate.
-	MOVFW Number1
+;	MOVWF Number1 ; we store the value to multiplicate.
+;	MOVFW Number1
 	MOVWF tensTemp ; this just to separate to review in the LCD
 	BCF STATUS,Z
 num1Separate:
@@ -174,21 +179,40 @@ ReturnFlag:
 ;------------ Multiplication -----------------;
 
 Mul: 
+	MOVFW onesTemp2
+	MOVWF onesTempT
 	BCF STATUS,Z
-	MOVFW Number1
 	DECF onesTemp2 ; for the multiply the ones - units -
+; first we will multiply the num1 ones by the num2 ones
+; and store the carry, then we will make the high 4 bits zeros 
+; to make it one digit ( in the least sig. reg) 
+	MOVLW D'0'
+	XORLW onesTimes
+	BTFSC STATUS, Z ; Check if Z flag is set (result is zero)
+    GOTO  digitIsZero   ; If not zero, jump to notEqual
+	
+	MOVLW oneTimes
+	MOVFW onesTempT
 MulLoop:
-	ADDWF Number1,F
+	MOVLW D'0'
+	ADDWF onesTempT,F
 	BTFSC STATUS,C
-	INCF Number1H
+	
 	DECFSZ onesTemp2
 	GOTO MulLoop 
 
+;--- if the ones digit of the first number is zero the mul result
+;--- for the LOW SIG. REG will be zero without doing the mul.
+digitIsZero:
+	CLRF ResultL
+	CLRF CarryCount
+	;GOTO numTensMul
+;-- we must make it go to the tens* 2nd number one.
 
 	BSF Select,RS
 	MOVLW '='
 	CALL send
-	MOVLW Number1H
+	MOVFW Number1H
 	ADDLW D'48'
 	CALL send
 
