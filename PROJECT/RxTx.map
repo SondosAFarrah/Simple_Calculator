@@ -1,0 +1,146 @@
+MPLINK 4.48, Linker
+Linker Map File - Created Wed Feb 14 20:48:17 2024
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x00042c
+      .config_2007_RXTX.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x000219      
+                            0x002007    0x002007      
+            536 out of 8454 program addresses used, program memory utilization is 6%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 ADDITION   0x000192    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                     BACK   0x00003d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                CarryLoop   0x000143    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                   DDIGIT   0x00019d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              DigitIsZero   0x00014f    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber1Ones   0x0000ca    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber1Tens   0x0000b1    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber2Ones   0x00010d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber2Tens   0x0000f4    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                EqualSign   0x000121    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            INCREMENTONES   0x0000d2    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+           INCREMENTONES2   0x000115    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            INCREMENTTENS   0x0000b9    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+           INCREMENTTENS2   0x0000fc    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                      ISR   0x000036    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  MAXNine   0x0000bc    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 MAXNine2   0x0000ff    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               MAXNineOne   0x0000d5    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              MAXNineOne2   0x000118    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  MulLoop   0x00012c    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  MulSign   0x0000de    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+             MullOnesLoop   0x000140    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 MullPIC1   0x000137    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              MullTenLoop   0x000151    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               Num1Concat   0x000128    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  Number1   0x000096    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            Number1String   0x000204    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               PrintFinal   0x0001ae    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  RECIVED   0x000185    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  RXCHECK   0x00017f    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               ReturnFlag   0x000190    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            SecondNumCame   0x00018d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              SepNumber1H   0x000160    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum1Ones   0x0000c5    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum1Tens   0x0000ad    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum2Ones   0x000108    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum2Tens   0x0000ef    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 THOUSAND   0x0001a4    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 TIMERINT   0x0001bf    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 TRANSMIT   0x0001bc    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              backFromSep   0x00018c    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                digitOnes   0x000149    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                     inid   0x000066    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                     init   0x000005    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                     loop   0x00016e    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                    loop1   0x000048    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                    loopX   0x00004d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+             num1Separate   0x000163    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                    onems   0x000046    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                   pulseE   0x000051    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+              resetTimer0   0x000174    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                     send   0x000056    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                    start   0x000081    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+     tenDigitWithoutCarry   0x000197    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            welcomeString   0x0001cd    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                      xms   0x00004c    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     init   0x000005    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                      ISR   0x000036    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                     BACK   0x00003d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                    onems   0x000046    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                    loop1   0x000048    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                      xms   0x00004c    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                    loopX   0x00004d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                   pulseE   0x000051    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                     send   0x000056    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                     inid   0x000066    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\LCDIS.INC
+                    start   0x000081    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  Number1   0x000096    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum1Tens   0x0000ad    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber1Tens   0x0000b1    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            INCREMENTTENS   0x0000b9    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  MAXNine   0x0000bc    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum1Ones   0x0000c5    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber1Ones   0x0000ca    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            INCREMENTONES   0x0000d2    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               MAXNineOne   0x0000d5    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  MulSign   0x0000de    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum2Tens   0x0000ef    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber2Tens   0x0000f4    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+           INCREMENTTENS2   0x0000fc    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 MAXNine2   0x0000ff    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+        SetCursorNum2Ones   0x000108    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+         ENTERNumber2Ones   0x00010d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+           INCREMENTONES2   0x000115    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              MAXNineOne2   0x000118    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                EqualSign   0x000121    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               Num1Concat   0x000128    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  MulLoop   0x00012c    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 MullPIC1   0x000137    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+             MullOnesLoop   0x000140    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                CarryLoop   0x000143    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                digitOnes   0x000149    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              DigitIsZero   0x00014f    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              MullTenLoop   0x000151    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              SepNumber1H   0x000160    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+             num1Separate   0x000163    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                     loop   0x00016e    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              resetTimer0   0x000174    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  RXCHECK   0x00017f    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                  RECIVED   0x000185    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+              backFromSep   0x00018c    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            SecondNumCame   0x00018d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               ReturnFlag   0x000190    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 ADDITION   0x000192    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+     tenDigitWithoutCarry   0x000197    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                   DDIGIT   0x00019d    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 THOUSAND   0x0001a4    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+               PrintFinal   0x0001ae    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 TRANSMIT   0x0001bc    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+                 TIMERINT   0x0001bf    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            welcomeString   0x0001cd    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+            Number1String   0x000204    program     static C:\Users\LENOVO\Documents\PIC\PROJECT\RxTx.asm
+
+

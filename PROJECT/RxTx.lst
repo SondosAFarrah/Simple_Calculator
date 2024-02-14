@@ -1,0 +1,1461 @@
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002         PROCESSOR 16F877A
+                      00003         INCLUDE "P16F877A.INC"  
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+                      00004 
+2007   3731           00005         __CONFIG 0x3731
+                      00006 
+                      00007 
+                      00008 
+                      00009 ;CharZ EQU 0x26
+                      00010 
+                      00011 
+  00000021            00012 Char EQU 0x21
+  00000022            00013 tensTemp EQU 0x22
+  00000023            00014 onesTemp EQU 0x23 
+  00000024            00015 tensTemp2 EQU 0x24
+  00000025            00016 onesTemp2 EQU 0x25 
+  00000026            00017 count EQU 0x26 
+  00000027            00018 tenTimes EQU 0x27
+  00000028            00019 onesTimes EQU 0x28
+  00000029            00020 RtensTemp EQU 0x29
+  00000030            00021 RtensTemp2 EQU 0x30
+  00000031            00022 CarryCount EQU 0x31
+  00000032            00023 ResultL EQU 0x32
+  00000033            00024 ResultH EQU 0x33
+  00000034            00025 ReciveTurn EQU 0x34
+  00000035            00026 ResultL2 EQU 0x35
+  00000036            00027 ResultH2 EQU 0x36
+  00000037            00028 THO EQU 0x37
+  00000038            00029 HUN EQU 0x38
+                      00030 
+                      00031 ;NUM EQU 0x25
+                      00032 
+                      00033 ; The instructions should start from here
+0000                  00034         ORG 0x00
+0000   2805           00035         GOTO init
+                      00036 
+                      00037 
+0004                  00038         ORG 0x04
+0004   2836           00039         GOTO ISR
+                      00040 
+                      00041 ;    ORG 0x08 ; Additional interrupt vectors (if needed)
+                      00042 ;       GOTO ISR2
+                      00043 ; The init for our program
+0005                  00044 init:
+                      00045         ;MOVLW '1'
+                      00046         ;MOVWF tensTemp
+0005   01A9           00047         CLRF RtensTemp
+0006   01A2           00048         CLRF tensTemp 
+0007   01A3           00049         CLRF onesTemp 
+0008   01A4           00050         CLRF tensTemp2 
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0009   01A5           00051         CLRF onesTemp2
+000A   01B0           00052         CLRF RtensTemp2
+000B   01B1           00053         CLRF CarryCount
+000C   01B2           00054         CLRF ResultL
+000D   01B3           00055         CLRF ResultH
+000E   01B5           00056         CLRF ResultL2
+000F   01B6           00057         CLRF ResultH2
+0010   01B4           00058         CLRF ReciveTurn
+0011   01B7           00059         CLRF THO
+0012   01B8           00060         CLRF HUN
+0013   3009           00061         MOVLW D'9'
+0014   00A7           00062         MOVWF tenTimes 
+                      00063 ;       CLRF numberOneTens 
+                      00064 ;       CLRF numberOneOnes 
+                      00065 ;       CLRF numberTwoTens 
+                      00066 ;       CLRF numberTwoOnes 
+0015   01A6           00067         CLRF count 
+                      00068 ;       CLRF twoSecFlag ; new 99999999999999999999999999999999999999999999999999999
+                      00069         
+                      00070         ;MOVLW D'100' ; 2 seconds with timer0 4MHz and pre-scale 1:64.
+                      00071         ;CLRF count
+                      00072         ;MOVWF count ; counter to the timer0.
+0016   1103           00073         BCF STATUS,Z
+0017   1683 1303      00074         BANKSEL TRISB 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0019   1406           00075         BSF TRISB, 0 ;Sets TRISB0 as an input.
+                      00076         
+001A   1283 1303      00077         BANKSEL INTCON
+001C   178B           00078         BSF INTCON, GIE ; set Global interrupt
+                      00079         ;BSF INTCON, TMR0IE  ; set the Timer0 enable
+                      00080 ;       BANKSEL OPTION_REG 
+                      00081 ;       MOVLW b'00000101' ; pre-sclae 1:64 for timer0
+                      00082 ;       MOVWF OPTION_REG ; store the previous vlaue in optreg.
+                      00083 ;       BSF INTCON, INTE
+001D   1683 1303      00084         BANKSEL TRISD
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001F   0188           00085         CLRF TRISD
+                      00086         
+                      00087         
+0020   1283 1303      00088         BANKSEL PORTD
+0022   2066           00089         CALL inid
+0023   204C           00090         CALL xms
+0024   204C           00091         CALL xms
+                      00092         
+                      00093 ; ------------- This is for the RX/TX configuration (commmunication between pics --------------------;  
+0025   1303           00094         BCF STATUS,6
+0026   1683           00095         BSF STATUS,5
+                      00096         
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0027   1307           00097         BCF TRISC,6
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0028   1787           00098         BSF TRISC,7
+                      00099         
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00100 ;       MOVLW b'00000000' ; to make D output
+                      00101 ;       MOVWF TRISD
+                      00102 
+0029   3020           00103         MOVLW b'00100000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+002A   0098           00104         MOVWF TXSTA
+                      00105         
+002B   1303           00106         BCF STATUS,6
+002C   1283           00107         BCF STATUS,5
+                      00108         
+002D   3090           00109         MOVLW b'10010000'
+002E   0098           00110         MOVWF RCSTA
+                      00111         
+002F   1303           00112         BCF STATUS,6
+0030   1683           00113         BSF STATUS,5
+0031   301F           00114         MOVLW d'31'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0032   0099           00115         MOVWF SPBRG
+                      00116 ; -------------- The end of RX/TX configuration ------------------------------------------;
+                      00117 ;       BANKSEL INTCON
+                      00118 ;       BSF INTCON,7
+                      00119 ;       BSF INTCON,6
+0033   1283 1303      00120         BANKSEL PORTD ; go to bank 0 to make the lcd run.
+0035   2881           00121         GOTO start
+                      00122 
+                      00123 ; When intruput happend the program will enter here
+                      00124 ; The ISR will increment the count by 1 until to reach 100 for 2 seconds.
+0036                  00125 ISR:
+                      00126         
+0036   1283 1303      00127         BANKSEL INTCON
+0038   110B           00128         BCF INTCON, TMR0IF
+0039   128B           00129         BCF INTCON, TMR0IE
+                      00130         ;BCF STATUS,Z ; -9999999999999999999999999999999999999999 new
+                      00131         ;DECF count
+Message[305]: Using default destination of 1 (file).
+003A   0AA6           00132         INCF count
+                      00133 ;       BTFSC STATUS,Z
+                      00134 ;       BSF twoSecFlag,0
+003B   1283 1303      00135         BANKSEL PORTD
+                      00136         ;BSF Select,RS
+                      00137         ;MOVLW 'B'
+                      00138         ;CALL send
+                      00139         
+                      00140         ;GOTO TEST
+                      00141 
+                      00142 ;------------ use them later in the button ---------------------------;
+                      00143 ;;      INCF Char
+                      00144 ;       MOVFW Char
+                      00145 ;       CALL send
+                      00146 ;       MOVFW Char
+                      00147 ;       MOVWF TXREG
+                      00148 ;       CALL TRANSMIT
+                      00149 
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+003D                  00150 BACK:
+003D   1283 1303      00151         BANKSEL TMR0
+003F   0181           00152         CLRF TMR0
+0040   1283 1303      00153         BANKSEL INTCON
+0042   168B           00154         BSF INTCON, TMR0IE
+0043   1283 1303      00155         BANKSEL PORTD
+                      00156         ;BSF INTCON, GIE
+                      00157         ;BCF INTCON,TMR0IF
+                      00158 
+0045   0009           00159         retfie
+                      00160 
+                      00161 
+                      00162 
+                      00163 ;INCLUDE "LCDIS_PORTD.INC" ; IF U WANT TO USE LCD ON PORT D
+                      00164 ;INCLUDE "LCDIS_PORTA.INC" ; IF U WANT TO USE LCD ON PORT A
+                      00165         INCLUDE "LCDIS.INC" 
+                      00001 ;       LCDIS.INC               MPB     19-12-05
+                      00002 ;
+                      00003 ;       Include file to operate 16x2 LCD display
+                      00004 ;       Uses GPR 70 - 75
+                      00005 ;       
+                      00006 ;       Final version
+                      00007 ;-------------------------------------------------------------------------------------------
+                      00008 
+  00000070            00009 Timer1  EQU     70              ; 1ms count register
+  00000071            00010 TimerX  EQU     71              ; Xms count register
+  00000072            00011 Var     EQU     72              ; Output variable
+  00000073            00012 Point   EQU     73              ; Program table pointer
+  00000074            00013 Select  EQU     74              ; Used to set or clear RS bit
+  00000075            00014 OutCod  EQU     75              ; Temp store for output code
+                      00015 
+  00000001            00016 RS      EQU     1               ; Register select output bit
+  00000002            00017 E       EQU     2               ; Enable output clocks display input
+                      00018 
+                      00019 
+                      00020 ;--------------------------------------------------------------------------------------------   
+                      00021 ;       1ms delay with 1us cycle time (1000 cycles) assuming 4MHZ oscillator
+                      00022 ;--------------------------------------------------------------------------------------------   
+0046                  00023 onems   ;nop
+0046   30F9           00024                 MOVLW   D'249'          ; Count for 1ms delay ==> 1 + 1 + 1 + 248 * (1 + 1 + 2) + 1 + 2 
+                            + 2 = 
+0047   00F0           00025                 MOVWF   Timer1          ; Load count
+0048   0000           00026 loop1   NOP                     ; Pad for 4 cycle loop
+Message[305]: Using default destination of 1 (file).
+0049   0BF0           00027                 DECFSZ  Timer1          ; Count
+004A   2848           00028                 GOTO    loop1           ; until Z
+004B   0008           00029                 RETURN                  ; and finish
+                      00030 
+                      00031 ;---------------------------------------------------------------------------------------------  
+                      00032 ;       Delay Xms
+                      00033 ;       Receives count in W, uses Onems
+                      00034 ;---------------------------------------------------------------------------------------------  
+004C   00F1           00035 xms             MOVWF   TimerX          ; Count for X ms
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+004D   2046           00036 loopX   CALL    onems           ; Delay 1ms
+Message[305]: Using default destination of 1 (file).
+004E   0BF1           00037                 DECFSZ  TimerX          ; Repeat X times 
+004F   284D           00038                 GOTO    loopX           ; until Z
+0050   0008           00039                 RETURN                  ; and finish
+                      00040 
+                      00041 ;---------------------------------------------------------------------------------------------  
+                      00042 ;       Generate data/command clock siganl E
+                      00043 ;---------------------------------------------------------------------------------------------  
+0051   1508           00044 pulseE  BSF     PORTD,E         ; Set E high
+0052   2046           00045         CALL    onems           ; Delay 1ms
+0053   1108           00046         BCF     PORTD,E         ; Reset E low
+0054   2046           00047         CALL    onems           ; Delay 1ms
+0055   0008           00048         RETURN                  ; done
+                      00049 
+                      00050 ;---------------------------------------------------------------------------------------------  
+                      00051 ;       Send a command byte in two nibbles from RB4 - RB7
+                      00052 ;       Receives command in W, uses PulseE and Onems
+                      00053 ;---------------------------------------------------------------------------------------------  
+0056   00F5           00054 send    MOVWF   OutCod          ; Store output code
+0057   39F0           00055         ANDLW   0F0             ; Clear low nybble
+0058   0088           00056         MOVWF   PORTD           ; Output high nybble
+0059   18F4           00057         BTFSC   Select,RS       ; Test RS bit
+005A   1488           00058         BSF     PORTD,RS        ; and set for data
+005B   2051           00059         CALL    pulseE          ; and clock display register
+005C   2046           00060         CALL    onems           ; wait 1ms for display to complete
+                      00061 
+Message[305]: Using default destination of 1 (file).
+005D   0EF5           00062         SWAPF   OutCod          ; Swap low and high nybbles 
+005E   0875           00063         MOVF    OutCod,W        ; Retrieve output code
+005F   39F0           00064         ANDLW   0F0             ; Clear low nybble
+0060   0088           00065         MOVWF   PORTD           ; Output low nybble
+0061   18F4           00066         BTFSC   Select,RS       ; Test RS bit
+0062   1488           00067         BSF     PORTD,RS        ; and set for data
+0063   2051           00068         CALL    pulseE          ; and clock display register
+0064   2046           00069         CALL    onems           ; wait 1ms for display to complete
+0065   0008           00070         RETURN                  ; done
+                      00071 
+                      00072 ;---------------------------------------------------------------------------------------------  
+                      00073 ;       Initialise the display
+                      00074 ;       Uses Send
+                      00075 ;---------------------------------------------------------------------------------------------  
+0066   3064           00076 inid    MOVLW   D'100'          ; Load count for 100ms delay
+0067   204C           00077         CALL    xms             ; and wait for display start
+0068   30F0           00078         MOVLW   0F0             ; Mask for select code
+0069   00F4           00079         MOVWF   Select          ; High nybble not masked
+                      00080 
+006A   3030           00081         MOVLW   0x30            ; Load initial nibble
+006B   0088           00082         MOVWF   PORTD           ; and output it to display
+006C   2051           00083         CALL    pulseE          ; Latch initial code
+006D   3005           00084         MOVLW   D'5'            ; Set delay 5ms
+006E   204C           00085         CALL    xms             ; and wait
+006F   2051           00086         CALL    pulseE          ; Latch initial code again
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0070   2046           00087         CALL    onems           ; Wait 1ms
+0071   2051           00088         CALL    pulseE          ; Latch initial code again
+0072   1208           00089         BCF     PORTD,4         ; Set 4-bit mode
+0073   2051           00090         CALL    pulseE          ; Latch it
+                      00091         
+0074   3028           00092         MOVLW   0x28            ; Set 4-bit mode, 2 lines
+0075   2056           00093         CALL    send            ; and send code
+0076   3008           00094         MOVLW   0x08            ; Switch off display
+0077   2056           00095         CALL    send            ; and send code
+0078   3001           00096         MOVLW   0x01            ; Code to clear display
+0079   2056           00097         CALL    send            ; and send code
+007A   3006           00098         MOVLW   0x06            ; Enable cursor auto inc  
+007B   2056           00099         CALL    send            ; and send code
+007C   3080           00100         MOVLW   0x80            ; Zero display address
+007D   2056           00101         CALL    send            ; and send code
+007E   300C           00102         MOVLW   0x0C            ; Turn on display  
+007F   2056           00103         CALL    send            ; and send code
+                      00104 
+0080   0008           00105         RETURN                  ; Done
+                      00166 ; The main code for our program
+0081                  00167 start:
+                      00168 ;       BSF Select,RS
+                      00169 ;       MOVLW 'A'
+                      00170 ;       CALL send
+0081   21CD           00171         CALL welcomeString
+0082   204C           00172         CALL xms
+0083   204C           00173         CALL xms
+0084   204C           00174         CALL xms
+0085   204C           00175         CALL xms
+                      00176 
+0086   21CD           00177         CALL welcomeString
+                      00178 ;       MOVLW 0xff
+0087   204C           00179         CALL xms
+0088   204C           00180         CALL xms
+0089   204C           00181         CALL xms
+008A   204C           00182         CALL xms
+                      00183 
+008B   21CD           00184         CALL welcomeString
+008C   204C           00185         CALL xms
+008D   204C           00186         CALL xms
+008E   204C           00187         CALL xms
+008F   204C           00188         CALL xms
+0090   204C           00189         CALL xms
+                      00190 
+                      00191 ;Number1:       
+0091   2204           00192         CALL Number1String
+0092   10F4           00193         BCF Select,RS
+0093   300F           00194         MOVLW 0x0F
+0094   2056           00195         CALL send 
+0095   14F4           00196         BSF Select,RS
+0096                  00197 Number1:
+                      00198         ;CALL inid
+0096   14F4           00199         BSF Select,RS
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0097   3030           00200         MOVLW '0'
+0098   2056           00201         CALL send
+0099   3030           00202         MOVLW '0'
+009A   2056           00203         CALL send
+009B   3078           00204         MOVLW 'x'
+009C   2056           00205         CALL send
+009D   3030           00206         MOVLW '0'
+009E   2056           00207         CALL send
+009F   3030           00208         MOVLW '0'
+00A0   2056           00209         CALL send
+                      00210 
+                      00211 ; --- testing RX/TX ---- ;
+                      00212         ;MOVLW '0'
+                      00213         ;MOVWF Char
+                      00214         ;MOVFW Char
+                      00215         ;MOVWF TXREG
+                      00216         ;CALL TRANSMIT
+                      00217 
+                      00218 
+00A1   1283 1303      00219         BANKSEL INTCON
+00A3   168B           00220         BSF INTCON, TMR0IE  ; set the Timer0 enable
+00A4   1283 1303      00221         BANKSEL TMR0
+00A6   0181           00222         CLRF TMR0
+00A7   1683 1303      00223         BANKSEL OPTION_REG 
+00A9   3005           00224         MOVLW b'00000101' ; pre-sclae 1:64 for timer0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+00AA   0081           00225         MOVWF OPTION_REG ; store the previous vlaue in optreg.
+00AB   1283 1303      00226         BANKSEL PORTD
+                      00227 
+                      00228 ;loop11:
+                      00229 ;       BTFSC STATUS,Z
+                      00230 ;       GOTO PRINT
+                      00231 ;       GOTO loop11
+                      00232 
+                      00233 ;PRINT:
+                      00234 ;       BSF Select,RS
+                      00235 ;       MOVLW '2'
+                      00236 ;       CALL send
+                      00237 ;       GOTO loop11
+                      00238 
+                      00239 
+                      00240 ; -------------------------- Number 1 Turn ------------------------------;
+00AD                  00241 SetCursorNum1Tens:
+00AD   10F4           00242         BCF Select,RS
+00AE   30C0           00243         MOVLW 0xC0
+00AF   2056           00244         CALL send
+00B0   14F4           00245         BSF Select,RS
+00B1                  00246 ENTERNumber1Tens:
+00B1   1BA6           00247         BTFSC count,7
+00B2   28C5           00248         GOTO SetCursorNum1Ones
+00B3   1806           00249         BTFSC PORTB,0
+00B4   28B1           00250         GOTO ENTERNumber1Tens
+00B5   204C           00251         CALL xms
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00B6   204C           00252         CALL xms
+00B7   1C06           00253         BTFSS PORTB,0
+00B8   28B1           00254         GOTO ENTERNumber1Tens
+                      00255         
+00B9                  00256 INCREMENTTENS:
+00B9   2174           00257         CALL resetTimer0
+Message[305]: Using default destination of 1 (file).
+00BA   0AA2           00258         INCF tensTemp
+00BB   14F4           00259         BSF Select,RS
+                      00260 ;       MOVFW tensTemp
+                      00261 ;       CALL send
+                      00262 ;       GOTO loop
+00BC                  00263 MAXNine:
+00BC   0822           00264         MOVFW tensTemp
+00BD   3C09           00265         SUBLW D'9'
+00BE   1C03           00266         BTFSS STATUS,C
+00BF   01A2           00267         CLRF tensTemp
+                      00268 
+00C0   14F4           00269         BSF Select,RS
+00C1   0822           00270         MOVFW tensTemp
+00C2   3E30           00271         ADDLW D'48'
+                      00272         
+00C3   2056           00273         CALL send
+00C4   28AD           00274         GOTO SetCursorNum1Tens
+                      00275 
+                      00276 
+00C5                  00277 SetCursorNum1Ones:
+00C5   2174           00278         CALL resetTimer0
+00C6   10F4           00279         BCF Select,RS
+00C7   30C1           00280         MOVLW 0xC1
+00C8   2056           00281         CALL send 
+00C9   14F4           00282         BSF Select,RS
+00CA                  00283 ENTERNumber1Ones:
+00CA   1BA6           00284         BTFSC count,7
+00CB   28DE           00285         GOTO MulSign ; go to put the operation cuz it passed 2 seconds.
+00CC   1806           00286         BTFSC PORTB,0
+00CD   28CA           00287         GOTO ENTERNumber1Ones
+00CE   204C           00288         CALL xms
+00CF   204C           00289         CALL xms
+00D0   1C06           00290         BTFSS PORTB,0
+00D1   28CA           00291         GOTO ENTERNumber1Ones
+                      00292         
+00D2                  00293 INCREMENTONES:
+00D2   2174           00294         CALL resetTimer0
+Message[305]: Using default destination of 1 (file).
+00D3   0AA3           00295         INCF onesTemp
+00D4   14F4           00296         BSF Select,RS
+                      00297 ;       MOVFW tensTemp
+                      00298 ;       CALL send
+                      00299 ;       GOTO loop
+00D5                  00300 MAXNineOne:
+00D5   0823           00301         MOVFW onesTemp
+00D6   3C09           00302         SUBLW D'9'
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00D7   1C03           00303         BTFSS STATUS,C
+00D8   01A3           00304         CLRF onesTemp
+                      00305 
+00D9   14F4           00306         BSF Select,RS
+00DA   0823           00307         MOVFW onesTemp
+00DB   3E30           00308         ADDLW D'48'
+                      00309         
+00DC   2056           00310         CALL send
+00DD   28C5           00311         GOTO SetCursorNum1Ones
+                      00312 
+                      00313 ;------------------ MUL SIGN --------------------------------;
+                      00314 
+00DE                  00315 MulSign:
+00DE   2174           00316         CALL resetTimer0
+00DF   10F4           00317         BCF Select,RS
+00E0   30C2           00318         MOVLW 0xC2
+00E1   2056           00319         CALL send 
+00E2   14F4           00320         BSF Select,RS
+00E3   3078           00321         MOVLW 'x'
+00E4   2056           00322         CALL send
+00E5   10F4           00323         BCF Select,RS
+00E6   3087           00324         MOVLW 0x87
+00E7   2056           00325         CALL send
+00E8   14F4           00326         BSF Select,RS
+00E9   3032           00327         MOVLW '2'
+00EA   2056           00328         CALL send
+00EB   10F4           00329         BCF Select,RS
+00EC   30C2           00330         MOVLW 0xC2
+00ED   2056           00331         CALL send
+00EE   28EF           00332         GOTO SetCursorNum2Tens
+                      00333 
+                      00334 ; ------------- Second Number Turn ;--------------------------
+                      00335 
+00EF                  00336 SetCursorNum2Tens:
+00EF   2174           00337         CALL resetTimer0
+00F0   10F4           00338         BCF Select,RS
+00F1   30C3           00339         MOVLW 0xC3
+00F2   2056           00340         CALL send
+00F3   14F4           00341         BSF Select,RS
+00F4                  00342 ENTERNumber2Tens:
+00F4   1BA6           00343         BTFSC count,7
+00F5   2908           00344         GOTO SetCursorNum2Ones
+00F6   1806           00345         BTFSC PORTB,0
+00F7   28F4           00346         GOTO ENTERNumber2Tens
+00F8   204C           00347         CALL xms
+00F9   204C           00348         CALL xms
+00FA   1C06           00349         BTFSS PORTB,0
+00FB   28F4           00350         GOTO ENTERNumber2Tens
+                      00351         
+00FC                  00352 INCREMENTTENS2:
+00FC   2174           00353         CALL resetTimer0
+Message[305]: Using default destination of 1 (file).
+00FD   0AA4           00354         INCF tensTemp2
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00FE   14F4           00355         BSF Select,RS
+                      00356 ;       MOVFW tensTemp
+                      00357 ;       CALL send
+                      00358 ;       GOTO loop
+00FF                  00359 MAXNine2:
+00FF   0824           00360         MOVFW tensTemp2
+0100   3C09           00361         SUBLW D'9'
+0101   1C03           00362         BTFSS STATUS,C
+0102   01A4           00363         CLRF tensTemp2
+                      00364 
+0103   14F4           00365         BSF Select,RS
+0104   0824           00366         MOVFW tensTemp2
+0105   3E30           00367         ADDLW D'48'
+                      00368         
+0106   2056           00369         CALL send
+0107   28EF           00370         GOTO SetCursorNum2Tens
+                      00371 
+                      00372 
+0108                  00373 SetCursorNum2Ones:
+0108   2174           00374         CALL resetTimer0
+0109   10F4           00375         BCF Select,RS
+010A   30C4           00376         MOVLW 0xC4
+010B   2056           00377         CALL send 
+010C   14F4           00378         BSF Select,RS
+010D                  00379 ENTERNumber2Ones:
+010D   1BA6           00380         BTFSC count,7
+010E   2921           00381         GOTO  EqualSign ; go to put do the calculation process.
+010F   1806           00382         BTFSC PORTB,0
+0110   290D           00383         GOTO ENTERNumber2Ones
+0111   204C           00384         CALL xms
+0112   204C           00385         CALL xms
+0113   1C06           00386         BTFSS PORTB,0
+0114   290D           00387         GOTO ENTERNumber2Ones
+                      00388         
+0115                  00389 INCREMENTONES2:
+0115   2174           00390         CALL resetTimer0
+Message[305]: Using default destination of 1 (file).
+0116   0AA5           00391         INCF onesTemp2
+0117   14F4           00392         BSF Select,RS
+                      00393 ;       MOVFW tensTemp
+                      00394 ;       CALL send
+                      00395 ;       GOTO loop
+0118                  00396 MAXNineOne2:
+0118   0825           00397         MOVFW onesTemp2
+0119   3C09           00398         SUBLW D'9'
+011A   1C03           00399         BTFSS STATUS,C
+011B   01A5           00400         CLRF onesTemp2
+011C   14F4           00401         BSF Select,RS
+011D   0825           00402         MOVFW onesTemp2
+011E   3E30           00403         ADDLW D'48'
+                      00404         
+011F   2056           00405         CALL send
+0120   2908           00406         GOTO SetCursorNum2Ones
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00407 
+                      00408 
+                      00409 ; ----------------- EQUAL SIGN -------------------------------;
+0121                  00410 EqualSign:
+0121   2174           00411         CALL resetTimer0
+0122   10F4           00412         BCF Select,RS
+0123   30C5           00413         MOVLW 0xC5 
+0124   2056           00414         CALL send
+0125   14F4           00415         BSF Select,RS
+0126   303D           00416         MOVLW '='
+0127   2056           00417         CALL send
+                      00418         ;GOTO EqualSign
+                      00419 ;-----------------------------------Concatination of Number 1------------------------;
+                      00420 
+0128                  00421 Num1Concat:
+0128   1103           00422         BCF STATUS,Z
+0129   0822           00423         MOVFW tensTemp
+012A   00A9           00424         MOVWF RtensTemp
+012B   0822           00425         MOVFW tensTemp
+012C                  00426 MulLoop:
+012C   07A2           00427         ADDWF tensTemp,F
+Message[305]: Using default destination of 1 (file).
+012D   0BA7           00428         DECFSZ tenTimes
+012E   292C           00429         GOTO MulLoop 
+                      00430         ; here the tens digit now multiplied by 10 and stored at the same register
+                      00431 ; now we must add the ones to the result number: 
+                      00432 
+012F   0823           00433         MOVFW onesTemp
+Message[305]: Using default destination of 1 (file).
+0130   07A2           00434         ADDWF tensTemp
+                      00435 
+0131   0822           00436         MOVFW tensTemp;number1
+                      00437 ;       ADDLW D'48'
+0132   0099           00438         MOVWF TXREG
+0133   21BC           00439         CALL TRANSMIT
+0134   0825           00440         MOVFW onesTemp2;ones for number 2
+0135   0099           00441         MOVWF TXREG
+0136   21BC           00442         CALL TRANSMIT
+                      00443 
+                      00444         
+                      00445         ; SENDING THE FIRST NUMBER TO THE SECOND PIC -----
+                      00446 ;       MOVLW tensTemp
+                      00447 ;       MOVWF TXREG
+                      00448 ;       CALL TRANSMIT
+                      00449 
+                      00450 ;----------------------------MUL Number1 * Tens of number2------------------------
+0137                  00451 MullPIC1
+0137   0824           00452         MOVFW tensTemp2
+0138   00B0           00453         MOVWF RtensTemp2
+0139   1103           00454         BCF STATUS,Z
+013A   3000           00455         MOVLW D'0'
+013B   0623           00456         XORWF onesTemp,W
+013C   1903           00457         BTFSC STATUS,Z
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+013D   294F           00458         GOTO DigitIsZero;-------------------
+013E   0823           00459         MOVFW onesTemp
+013F   01A3           00460         CLRF onesTemp
+0140                  00461 MullOnesLoop
+0140   07A3           00462         ADDWF onesTemp,F
+Message[305]: Using default destination of 1 (file).
+0141   0BB0           00463         DECFSZ RtensTemp2
+0142   2940           00464         GOTO MullOnesLoop
+0143                  00465 CarryLoop
+0143   300A           00466         MOVLW D'10'
+Message[305]: Using default destination of 1 (file).
+0144   02A3           00467         SUBWF onesTemp
+0145   1C03           00468         BTFSS STATUS,C
+0146   2949           00469         GOTO digitOnes
+Message[305]: Using default destination of 1 (file).
+0147   0AB1           00470         INCF CarryCount
+0148   2943           00471         GOTO CarryLoop
+0149                  00472 digitOnes
+                      00473         ;REMOVE -
+0149   0823           00474         MOVFW onesTemp
+014A   3E0A           00475         ADDLW D'10'
+014B   00A3           00476         MOVWF onesTemp
+014C   0823           00477         MOVFW onesTemp
+014D   00B2           00478         MOVWF ResultL
+014E   2951           00479         GOTO MullTenLoop
+                      00480 
+014F                  00481 DigitIsZero
+014F   01B2           00482         CLRF ResultL
+0150   01B1           00483         CLRF CarryCount
+                      00484 
+                      00485         ;CLRF ResultH
+                      00486         ;MOVFW 
+0151                  00487 MullTenLoop
+0151   0829           00488         MOVFW RtensTemp
+0152   07B3           00489         ADDWF ResultH,F
+0153   0833           00490         MOVFW ResultH
+                      00491 
+                      00492         ;ADDLW D'48'
+                      00493         ;CALL send
+Message[305]: Using default destination of 1 (file).
+0154   0BA4           00494         DECFSZ tensTemp2
+0155   2951           00495         GOTO MullTenLoop
+0156   0831           00496         MOVFW CarryCount
+0157   07B3           00497         ADDWF ResultH,F
+                      00498 
+0158   217F           00499         CALL RXCHECK
+                      00500 
+0159   14F4           00501         BSF Select,RS
+015A   0833           00502         MOVFW ResultH
+015B   3E30           00503         ADDLW D'48'
+015C   2056           00504         CALL send
+015D   0832           00505         MOVFW ResultL
+015E   3E30           00506         ADDLW D'48'
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+015F   2056           00507         CALL send
+                      00508         
+                      00509 
+                      00510 ; ---------- Function to separate the First Number into tens, and ones to preview it ---------;
+0160                  00511 SepNumber1H:
+0160   1103           00512         BCF STATUS,Z
+0161   01A7           00513         CLRF tenTimes
+0162   01A8           00514         CLRF onesTimes
+0163                  00515 num1Separate:
+0163   300A           00516         MOVLW D'10'
+Message[305]: Using default destination of 1 (file).
+0164   02B6           00517         SUBWF ResultH2
+Message[305]: Using default destination of 1 (file).
+0165   0AA7           00518         INCF tenTimes
+0166   1803           00519         BTFSC STATUS,C
+0167   2963           00520         GOTO num1Separate 
+Message[305]: Using default destination of 1 (file).
+0168   07B6           00521         ADDWF ResultH2
+Message[305]: Using default destination of 1 (file).
+0169   03A7           00522         DECF tenTimes
+016A   0836           00523         MOVF ResultH2,W
+016B   00A8           00524         MOVWF onesTimes
+                      00525 
+016C   298C           00526         GOTO backFromSep  
+                      00527         ;BSF Select,RS
+                      00528 ;------------tensTimes = tens for number2 high  , onesTimes = ones for number2 high
+                      00529 
+                      00530 ;--------- Result form second PIC--------------------------
+                      00531         
+                      00532         ;MOVFW tenTimes
+                      00533         ;ADDLW D'48'
+                      00534         ;CALL send
+                      00535         ;BSF Select,RS
+                      00536         ;MOVFW onesTimes
+                      00537 ;       ADDLW D'48'
+                      00538 ;       CALL send
+                      00539 
+                      00540 ;       MOVLW 'Z'
+                      00541         
+                      00542 ;       MOVFW tenTimes
+                      00543 ;       ADDLW D'48'
+                      00544 ;       MOVWF TXREG
+                      00545 ;       CALL TRANSMIT
+                      00546 
+                      00547 
+                      00548         ;MOVLW tenTimes
+                      00549         ;MOVWF TXREG
+                      00550         ;CALL TRANSMIT
+                      00551         ;MOVLW onesTimes
+                      00552         ;MOVWF TXREG
+                      00553         ;CALL TRANSMIT
+                      00554 ;-----------------------MUL 
+                      00555         
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00556 
+                      00557 
+016D   296E           00558         GOTO loop
+                      00559 
+                      00560 
+                      00561 
+                      00562 
+                      00563         ;CALL RXCHECK
+                      00564 
+016E                  00565 loop: 
+016E   2174           00566         CALL resetTimer0
+016F   204C           00567         CALL xms
+0170   204C           00568         CALL xms
+0171   204C           00569         CALL xms
+0172   204C           00570         CALL xms
+0173   296E           00571         GOTO loop
+                      00572 
+                      00573 
+                      00574 
+                      00575 
+                      00576 ; Routine for restarting the Timer0 
+                      00577 
+0174                  00578 resetTimer0:
+0174   1283 1303      00579         BANKSEL TMR0
+0176   0181           00580         CLRF TMR0
+0177   01A6           00581         CLRF count
+                      00582 ;       MOVLW D'100'
+                      00583 ;       MOVWF count
+0178   1283 1303      00584         BANKSEL INTCON
+017A   168B           00585         BSF INTCON, TMR0IE
+017B   110B           00586         BCF INTCON, TMR0IF
+                      00587 ;       BSF INTCON, GIE 
+017C   1283 1303      00588         BANKSEL PORTD
+017E   0008           00589         RETURN
+                      00590 
+017F                  00591 RXCHECK:
+017F   1A8C           00592         BTFSC PIR1,5
+0180   2185           00593         CALL RECIVED
+0181   18B4           00594         BTFSC ReciveTurn,1
+0182   2992           00595         GOTO ADDITION
+0183   297F           00596         GOTO RXCHECK
+0184   0008           00597         RETURN
+                      00598 
+0185                  00599 RECIVED:
+0185   081A           00600         MOVF RCREG,0
+0186   1834           00601         BTFSC ReciveTurn,0
+0187   298D           00602         GOTO SecondNumCame
+0188   1434           00603         BSF ReciveTurn,0
+0189   00B6           00604         MOVWF ResultH2
+                      00605 ;       MOVFW ResultH2
+                      00606         ;BSF Select,RS
+                      00607         ;ADDLW D'48'
+                      00608         ;CALL send
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00609         ;GOTO loop
+018A   1103           00610         BCF STATUS,Z
+018B   2960           00611         GOTO SepNumber1H
+018C                  00612 backFromSep     
+018C   2990           00613         GOTO ReturnFlag
+018D                  00614 SecondNumCame
+                      00615         ;MOVF RCREG,0
+018D   01B5           00616         CLRF ResultL2
+018E   00B5           00617         MOVWF ResultL2
+                      00618 ;       MOVFW ResultL2
+                      00619 ;       BSF Select,RS
+                      00620 ;       ADDLW D'48'
+                      00621         ;CALL send
+                      00622         ;GOTO loop
+018F   14B4           00623         BSF ReciveTurn,1
+                      00624 
+0190                  00625 ReturnFlag
+                      00626 ;       MOVWF PORTD
+0190   128C           00627         BCF PIR1,5
+0191   0008           00628         RETURN
+                      00629 
+0192                  00630 ADDITION
+                      00631 
+0192   01B1           00632         CLRF CarryCount
+0193   0828           00633         MOVFW onesTimes
+Message[305]: Using default destination of 1 (file).
+0194   07B2           00634         ADDWF ResultL  ;FINAL TENS
+                      00635 ;       BTFSC STATUS,C
+                      00636 ;       INCF CarryCount
+                      00637         
+                      00638 
+                      00639 
+                      00640 ;       MOVFW CarryCount
+                      00641         ;ADDWF tenTimes
+0195   0827           00642         MOVFW tenTimes
+0196   07B3           00643         ADDWF ResultH,F ;FINAL THOUSAND AND HUNDS 
+0197                  00644 tenDigitWithoutCarry
+0197   300A           00645         MOVLW D'10'
+0198   02B2           00646         SUBWF ResultL,F
+Message[305]: Using default destination of 1 (file).
+0199   0AB1           00647         INCF CarryCount
+019A   1C03           00648         BTFSS STATUS,C
+019B   299D           00649         GOTO DDIGIT
+019C   2997           00650         GOTO tenDigitWithoutCarry
+                      00651 
+019D                  00652 DDIGIT
+Message[305]: Using default destination of 1 (file).
+019D   03B1           00653         DECF CarryCount
+019E   0831           00654         MOVFW CarryCount
+Message[305]: Using default destination of 1 (file).
+019F   07B3           00655         ADDWF ResultH
+01A0   0832           00656         MOVFW ResultL
+01A1   3E0A           00657         ADDLW D'10'
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01A2   00B2           00658         MOVWF ResultL
+                      00659 
+01A3   1103           00660         BCF STATUS,Z
+01A4                  00661 THOUSAND:
+01A4   300A           00662         MOVLW D'10'
+Message[305]: Using default destination of 1 (file).
+01A5   0AB7           00663         INCF THO
+Message[305]: Using default destination of 1 (file).
+01A6   02B3           00664         SUBWF ResultH
+01A7   1803           00665         BTFSC STATUS,C
+01A8   29A4           00666         GOTO THOUSAND
+Message[305]: Using default destination of 1 (file).
+01A9   07B3           00667         ADDWF ResultH
+Message[305]: Using default destination of 1 (file).
+01AA   03B7           00668         DECF THO
+01AB   0833           00669         MOVFW ResultH
+01AC   00B8           00670         MOVWF HUN
+                      00671 
+01AD   29AE           00672         GOTO PrintFinal 
+                      00673 
+                      00674 
+                      00675 
+01AE                  00676 PrintFinal
+01AE   14F4           00677         BSF Select,RS
+01AF   0837           00678         MOVFW THO ;FINAL THOUSAND 
+01B0   3E30           00679         ADDLW D'48'
+01B1   2056           00680         CALL send
+01B2   0838           00681         MOVFW HUN ;FINAL HUN
+01B3   3E30           00682         ADDLW D'48'
+01B4   2056           00683         CALL send
+01B5   0832           00684         MOVFW ResultL  ;FINAL TENS 
+01B6   3E30           00685         ADDLW D'48'
+01B7   2056           00686         CALL send
+01B8   0835           00687         MOVFW ResultL2 ;final one
+01B9   3E30           00688         ADDLW D'48'
+01BA   2056           00689         CALL send
+01BB   296E           00690         GOTO loop
+                      00691 
+                      00692         
+                      00693 
+01BC                  00694 TRANSMIT:
+01BC   1E0C           00695         BTFSS PIR1,4
+01BD   29BC           00696         GOTO TRANSMIT
+01BE   0008           00697         RETURN
+                      00698 
+01BF                  00699 TIMERINT:
+01BF   1283 1303      00700         BANKSEL INTCON
+01C1   120B           00701         BCF INTCON, INTE
+01C2   108B           00702         BCF INTCON, INTF
+01C3   14F4           00703         BSF Select,RS
+01C4   3048           00704         MOVLW 'H'
+01C5   2056           00705         CALL send
+01C6   1283 1303      00706         BANKSEL PIR1
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01C8   110C           00707         BCF PIR1,2
+01C9   1683 1303      00708         BANKSEL PIE1
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+01CB   110C           00709         BCF PIE1,2
+                      00710 
+01CC   283D           00711         GOTO BACK
+                      00712 
+01CD                  00713 welcomeString:
+01CD   2066           00714         CALL inid
+01CE   14F4           00715         BSF Select,RS
+01CF   3057           00716         MOVLW 'W'
+01D0   2056           00717         CALL send
+01D1   3065           00718         MOVLW 'e'
+01D2   2056           00719         CALL send
+01D3   306C           00720         MOVLW 'l'
+01D4   2056           00721         CALL send
+01D5   3063           00722         MOVLW 'c'
+01D6   2056           00723         CALL send
+01D7   306F           00724         MOVLW 'o'
+01D8   2056           00725         CALL send
+01D9   306D           00726         MOVLW 'm'
+01DA   2056           00727         CALL send
+01DB   3065           00728         MOVLW 'e'
+01DC   2056           00729         CALL send
+01DD   3020           00730         MOVLW ' '
+01DE   2056           00731         CALL send
+01DF   3074           00732         MOVLW 't'
+01E0   2056           00733         CALL send
+01E1   306F           00734         MOVLW 'o'
+01E2   2056           00735         CALL send
+01E3   10F4           00736         BCF Select,RS
+01E4   30C0           00737         MOVLW 0xC0
+01E5   2056           00738         CALL send
+01E6   14F4           00739         BSF Select,RS
+01E7   304D           00740         MOVLW 'M'
+01E8   2056           00741         CALL send
+01E9   3075           00742         MOVLW 'u'
+01EA   2056           00743         CALL send
+01EB   306C           00744         MOVLW 'l'
+01EC   2056           00745         CALL send
+01ED   3074           00746         MOVLW 't'
+01EE   2056           00747         CALL send
+01EF   3069           00748         MOVLW 'i'
+01F0   2056           00749         CALL send
+01F1   3070           00750         MOVLW 'p'
+01F2   2056           00751         CALL send
+01F3   306C           00752         MOVLW 'l'
+01F4   2056           00753         CALL send
+01F5   3069           00754         MOVLW 'i'
+01F6   2056           00755         CALL send 
+01F7   3063           00756         MOVLW 'c'
+01F8   2056           00757         CALL send 
+01F9   3061           00758         MOVLW 'a'
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+01FA   2056           00759         CALL send
+01FB   3074           00760         MOVLW 't'
+01FC   2056           00761         CALL send
+01FD   3069           00762         MOVLW 'i'
+01FE   2056           00763         CALL send
+01FF   306F           00764         MOVLW 'o'
+0200   2056           00765         CALL send 
+0201   306E           00766         MOVLW 'n'
+0202   2056           00767         CALL send 
+0203   0008           00768         RETURN
+0204                  00769 Number1String:
+0204   2066           00770         CALL inid
+0205   14F4           00771         BSF Select,RS
+0206   304E           00772         MOVLW 'N'
+0207   2056           00773         CALL send
+0208   3075           00774         MOVLW 'u'
+0209   2056           00775         CALL send
+020A   306D           00776         MOVLW 'm'
+020B   2056           00777         CALL send
+020C   3062           00778         MOVLW 'b'
+020D   2056           00779         CALL send
+020E   3065           00780         MOVLW 'e'
+020F   2056           00781         CALL send
+0210   3072           00782         MOVLW 'r'
+0211   2056           00783         CALL send
+0212   3020           00784         MOVLW ' '
+0213   2056           00785         CALL send
+0214   3031           00786         MOVLW '1'
+0215   2056           00787         CALL send
+0216   10F4           00788         BCF Select,RS
+0217   30C0           00789         MOVLW 0xC0
+0218   2056           00790         CALL send
+0219   0008           00791         RETURN
+                      00792         
+                      00793 
+                      00794 
+                      00795 
+                      00796 
+                      00797 
+                      00798         END
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADDITION                          00000192
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BACK                              0000003D
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+CarryCount                        00000031
+CarryLoop                         00000143
+Char                              00000021
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DDIGIT                            0000019D
+D_A                               00000005
+DigitIsZero                       0000014F
+E                                 00000002
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+ENTERNumber1Ones                  000000CA
+ENTERNumber1Tens                  000000B1
+ENTERNumber2Ones                  0000010D
+ENTERNumber2Tens                  000000F4
+EqualSign                         00000121
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+HUN                               00000038
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+IBOV                              00000005
+INCREMENTONES                     000000D2
+INCREMENTONES2                    00000115
+INCREMENTTENS                     000000B9
+INCREMENTTENS2                    000000FC
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+ISR                               00000036
+MAXNine                           000000BC
+MAXNine2                          000000FF
+MAXNineOne                        000000D5
+MAXNineOne2                       00000118
+MulLoop                           0000012C
+MulSign                           000000DE
+MullOnesLoop                      00000140
+MullPIC1                          00000137
+MullTenLoop                       00000151
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+Num1Concat                        00000128
+Number1                           00000096
+Number1String                     00000204
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+OutCod                            00000075
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+Point                             00000073
+PrintFinal                        000001AE
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RECIVED                           00000185
+RP0                               00000005
+RP1                               00000006
+RS                                00000001
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+RXCHECK                           0000017F
+R_W                               00000002
+ReciveTurn                        00000034
+ResultH                           00000033
+ResultH2                          00000036
+ResultL                           00000032
+ResultL2                          00000035
+ReturnFlag                        00000190
+RtensTemp                         00000029
+RtensTemp2                        00000030
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+SecondNumCame                     0000018D
+Select                            00000074
+SepNumber1H                       00000160
+SetCursorNum1Ones                 000000C5
+SetCursorNum1Tens                 000000AD
+SetCursorNum2Ones                 00000108
+SetCursorNum2Tens                 000000EF
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+THO                               00000037
+THOUSAND                          000001A4
+TIMERINT                          000001BF
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRANSMIT                          000001BC
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+Timer1                            00000070
+TimerX                            00000071
+UA                                00000001
+Var                               00000072
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+MPASM  5.50                          RXTX.ASM   2-14-2024  20:48:14         PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+backFromSep                       0000018C
+count                             00000026
+digitOnes                         00000149
+inid                              00000066
+init                              00000005
+loop                              0000016E
+loop1                             00000048
+loopX                             0000004D
+num1Separate                      00000163
+onems                             00000046
+onesTemp                          00000023
+onesTemp2                         00000025
+onesTimes                         00000028
+pulseE                            00000051
+resetTimer0                       00000174
+send                              00000056
+start                             00000081
+tenDigitWithoutCarry              00000197
+tenTimes                          00000027
+tensTemp                          00000022
+tensTemp2                         00000024
+welcomeString                     000001CD
+xms                               0000004C
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0100 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0140 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0180 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+01C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0200 : XXXXXXXXXXXXXXXX XXXXXXXXXX------ ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   535
+Program Memory Words Free:  7657
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :    34 reported,     0 suppressed
+
+

@@ -1,0 +1,18 @@
+Message[302] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 46 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 56 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 57 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 61 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 72 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\LCDIS.INC 27 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\LCDIS.INC 37 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\LCDIS.INC 62 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 151 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 152 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 155 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 156 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 208 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 217 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 306 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 307 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 310 : Using default destination of 1 (file).
+Message[305] C:\USERS\LENOVO\DOCUMENTS\PIC\PROJECT\NEW FOLDER\SLAVE.ASM 311 : Using default destination of 1 (file).
