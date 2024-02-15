@@ -1,0 +1,18 @@
+Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 54 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 55 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 59 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 70 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\LCDIS.INC 27 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\LCDIS.INC 37 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\LCDIS.INC 62 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 132 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 133 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 136 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 137 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 188 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 197 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 273 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 274 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 277 : Using default destination of 1 (file).
+Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 278 : Using default destination of 1 (file).

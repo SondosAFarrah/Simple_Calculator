@@ -1,0 +1,62 @@
+MPLINK 4.48, Linker
+Linker Map File - Created Fri Feb 02 13:55:20 2024
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x0000d2
+     .config_2007_SLAVE.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x00006c      
+                            0x002007    0x002007      
+            107 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     BACK   0x00001f    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                      ISR   0x00001b    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                  RECIVED   0x000069    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                  RXCHECK   0x000065    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                     inid   0x000044    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     init   0x000005    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                     loop   0x000060    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                    loop1   0x000026    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    loopX   0x00002b    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    onems   0x000024    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                   pulseE   0x00002f    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     send   0x000034    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    start   0x00005f    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                      xms   0x00002a    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     init   0x000005    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                      ISR   0x00001b    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                     BACK   0x00001f    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                    onems   0x000024    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    loop1   0x000026    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                      xms   0x00002a    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    loopX   0x00002b    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                   pulseE   0x00002f    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     send   0x000034    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                     inid   0x000044    program     static D:\BZU\Real Time\RXTXexample\LCDIS.INC
+                    start   0x00005f    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                     loop   0x000060    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                  RXCHECK   0x000065    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+                  RECIVED   0x000069    program     static D:\BZU\Real Time\RXTXexample\slave.asm
+
+
