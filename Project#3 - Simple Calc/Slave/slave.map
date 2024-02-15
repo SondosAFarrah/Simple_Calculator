@@ -1,0 +1,84 @@
+MPLINK 4.48, Linker
+Linker Map File - Created Thu Feb 15 17:50:40 2024
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x0001c6
+     .config_2007_SLAVE.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x0000e2      
+                            0x002007    0x002007      
+            228 out of 8454 program addresses used, program memory utilization is 2%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                CARRYLOOP   0x00009e    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                    DIGIT   0x0000a4    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                      Mul   0x000091    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  MulLoop   0x00009a    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+               MulLoopTen   0x0000ae    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                    PRINT   0x0000b6    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  RECIVED   0x00006f    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  RXCHECK   0x000066    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+               ReturnFlag   0x00008f    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                      SEP   0x0000c5    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                 TRANSMIT   0x00006c    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+              digitIsZero   0x0000aa    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                     inid   0x000045    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                     init   0x000001    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                     loop   0x000061    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                    loop1   0x000027    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                    loopX   0x00002c    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+             num1Separate   0x000075    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+            num1Separate2   0x0000cf    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                    onems   0x000025    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                   pulseE   0x000030    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+            secondNumCame   0x000089    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                     send   0x000035    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                    start   0x000060    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  tenLoop   0x0000ac    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                      xms   0x00002b    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                     init   0x000001    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                    onems   0x000025    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                    loop1   0x000027    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                      xms   0x00002b    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                    loopX   0x00002c    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                   pulseE   0x000030    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                     send   0x000035    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                     inid   0x000045    program     static D:\BZU\Real Time\RXTXexample\Slave\LCDIS.INC
+                    start   0x000060    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                     loop   0x000061    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  RXCHECK   0x000066    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                 TRANSMIT   0x00006c    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  RECIVED   0x00006f    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+             num1Separate   0x000075    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+            secondNumCame   0x000089    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+               ReturnFlag   0x00008f    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                      Mul   0x000091    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  MulLoop   0x00009a    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                CARRYLOOP   0x00009e    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                    DIGIT   0x0000a4    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+              digitIsZero   0x0000aa    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                  tenLoop   0x0000ac    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+               MulLoopTen   0x0000ae    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                    PRINT   0x0000b6    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+                      SEP   0x0000c5    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+            num1Separate2   0x0000cf    program     static D:\BZU\Real Time\RXTXexample\Slave\slave.asm
+
+
