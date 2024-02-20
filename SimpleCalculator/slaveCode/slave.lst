@@ -1,0 +1,849 @@
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 
+                      00002 ;--------------------------------------------------------------------------------------;
+                      00003 ;         Sample Calculator                  Authors                   Instructor
+                      00004 ;        15/2/2024                Sondos Farrah 1200905         Dr. Hanna Bullata
+                      00005 ;     Birzeit University        Mohammad Makhamreh 1200227        
+                      00006 ;         Code2: Co-Proccesor CPU        Jana Abu Nasser 1201110         
+                      00007 ;--------------------------------------------------------------------------------------;
+                      00008 
+                      00009         PROCESSOR 16F877A
+                      00010         INCLUDE "P16F877A.INC"  ; including the PIC library to make it easy of calling the Reg by names.
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+                      00011 
+2007   3731           00012         __CONFIG 0x3731
+                      00013 
+                      00014 ; ----------------------------- Define the used registers for our purposes -------------;
+  00000022            00015 tensTemp EQU 0x22
+  00000027            00016 tenTimes EQU 0x27
+  00000028            00017 onesTimes EQU 0x28
+  00000029            00018 reciveTurn EQU 0x29 ; to see the recived shoot turn from the pic1.
+  00000030            00019 onesTemp2 EQU 0x30
+  00000031            00020 CarryCount EQU 0x31 ; to save the carry. in multiple operations.
+  00000032            00021 ResultH EQU 0x32
+  00000033            00022 ResultL EQU 0x33
+  00000034            00023 onesTempT EQU 0x34
+  00000035            00024 Number1 EQU 0x35
+  00000036            00025 CarryCount2 EQU 0x36 ; to save the carry2. in multiple operations.
+                      00026 
+                      00027 
+                      00028 ; The instructions should start from here
+0000                  00029         ORG 0x00
+0000   2801           00030         GOTO init
+                      00031 
+                      00032 
+                      00033 ;       ORG 0x04
+                      00034 ;       GOTO ISR
+                      00035 
+                      00036 
+                      00037 ; The init for our program, to set the initial configurations.
+0001                  00038 init:
+0001   01B5           00039         CLRF Number1
+0002   01B1           00040         CLRF CarryCount
+0003   01B6           00041         CLRF CarryCount2
+0004   01B4           00042         CLRF onesTempT
+0005   01B2           00043         CLRF ResultH
+0006   01B3           00044         CLRF ResultL 
+0007   01A9           00045         CLRF reciveTurn
+0008   01B0           00046         CLRF onesTemp2
+0009   01A2           00047         CLRF tensTemp
+000A   01A7           00048         CLRF tenTimes
+000B   1683 1303      00049         BANKSEL TRISD
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000D   0188           00050         CLRF TRISD ;Sets TRISD as an output (LCD)
+                      00051         
+000E   1283 1303      00052         BANKSEL PORTD ; Bank0, PortD 
+0010   2045           00053         CALL inid ; the initial configuration of the LCD.
+0011   202B           00054         CALL xms
+0012   202B           00055         CALL xms
+                      00056 ; ------------- This is for the RX/TX configuration (commmunication between pics --------------------;  
+0013   1303           00057         BCF STATUS,6
+0014   1683           00058         BSF STATUS,5 ; 01: Bank1.
+                      00059 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0015   1307           00060         BCF TRISC,6 ; seting TX (BC6) output for transmiting.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0016   1787           00061         BSF TRISC,7 ; seting RX (BC7) output for transmiting.
+                      00062 
+0017   3020           00063         MOVLW b'00100000' 
+                      00064         ;bit7=0: clock from External Source.
+                      00065         ;bit6=0: select 8 bit transmition
+                      00066         ;bit5=1: transmit Enable.
+                      00067         ;bit4=0: Asyc. Mode.
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0018   0098           00068         MOVWF TXSTA
+                      00069         
+0019   1303           00070         BCF STATUS,6
+001A   1283           00071         BCF STATUS,5 ; 00 Bank0
+                      00072         
+001B   3090           00073         MOVLW b'10010000'
+                      00074         ;bit7=1: Serial Port Enable
+                      00075 
+                      00076         ;bit6=0: 8 bit mode.
+                      00077         ;bit4=1: Enable continuous recive.
+001C   0098           00078         MOVWF RCSTA
+                      00079         
+001D   1303           00080         BCF STATUS,6
+001E   1683           00081         BSF STATUS,5 ; 01: Bank1.
+001F   3006           00082         MOVLW d'6' ;to make BAUD Rate 9600 for Fosc = 4MHz 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0020   0099           00083         MOVWF SPBRG
+                      00084 ; -------------- The end of RX/TX configuration ------------------------------------------;
+                      00085 ;       BSF INTCON,7
+                      00086 ;       BSF INTCON,6 
+0021   1303           00087         BCF STATUS,6
+0022   1283           00088         BCF STATUS,5
+0023   128C           00089         BCF PIR1,5
+0024   2860           00090         GOTO start
+                      00091 
+                      00092 ; When intruput happend the program will enter here
+                      00093 ;ISR:
+                      00094 ;       BANKSEL INTCON
+                      00095 ;       BCF INTCON, INTE
+                      00096 ;       BCF INTCON, INTF
+                      00097 ;BACK:
+                      00098 ;       BANKSEL INTCON
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00099 ;       BSF INTCON, INTE
+                      00100 ;       BSF INTCON, GIE
+                      00101 
+                      00102 ;       retfie
+                      00103 
+                      00104         INCLUDE "LCDIS.INC" 
+                      00001 ;       LCDIS.INC               MPB     19-12-05
+                      00002 ;
+                      00003 ;       Include file to operate 16x2 LCD display
+                      00004 ;       Uses GPR 70 - 75
+                      00005 ;       
+                      00006 ;       Final version
+                      00007 ;-------------------------------------------------------------------------------------------
+                      00008 
+  00000070            00009 Timer1  EQU     70              ; 1ms count register
+  00000071            00010 TimerX  EQU     71              ; Xms count register
+  00000072            00011 Var     EQU     72              ; Output variable
+  00000073            00012 Point   EQU     73              ; Program table pointer
+  00000074            00013 Select  EQU     74              ; Used to set or clear RS bit
+  00000075            00014 OutCod  EQU     75              ; Temp store for output code
+                      00015 
+  00000001            00016 RS      EQU     1               ; Register select output bit
+  00000002            00017 E       EQU     2               ; Enable output clocks display input
+                      00018 
+                      00019 
+                      00020 ;--------------------------------------------------------------------------------------------   
+                      00021 ;       1ms delay with 1us cycle time (1000 cycles) assuming 4MHZ oscillator
+                      00022 ;--------------------------------------------------------------------------------------------   
+0025                  00023 onems   ;nop
+0025   30F9           00024                 MOVLW   D'249'          ; Count for 1ms delay ==> 1 + 1 + 1 + 248 * (1 + 1 + 2) + 1 + 2 
+                            + 2 = 
+0026   00F0           00025                 MOVWF   Timer1          ; Load count
+0027   0000           00026 loop1   NOP                     ; Pad for 4 cycle loop
+Message[305]: Using default destination of 1 (file).
+0028   0BF0           00027                 DECFSZ  Timer1          ; Count
+0029   2827           00028                 GOTO    loop1           ; until Z
+002A   0008           00029                 RETURN                  ; and finish
+                      00030 
+                      00031 ;---------------------------------------------------------------------------------------------  
+                      00032 ;       Delay Xms
+                      00033 ;       Receives count in W, uses Onems
+                      00034 ;---------------------------------------------------------------------------------------------  
+002B   00F1           00035 xms             MOVWF   TimerX          ; Count for X ms
+002C   2025           00036 loopX   CALL    onems           ; Delay 1ms
+Message[305]: Using default destination of 1 (file).
+002D   0BF1           00037                 DECFSZ  TimerX          ; Repeat X times 
+002E   282C           00038                 GOTO    loopX           ; until Z
+002F   0008           00039                 RETURN                  ; and finish
+                      00040 
+                      00041 ;---------------------------------------------------------------------------------------------  
+                      00042 ;       Generate data/command clock siganl E
+                      00043 ;---------------------------------------------------------------------------------------------  
+0030   1508           00044 pulseE  BSF     PORTD,E         ; Set E high
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0031   2025           00045         CALL    onems           ; Delay 1ms
+0032   1108           00046         BCF     PORTD,E         ; Reset E low
+0033   2025           00047         CALL    onems           ; Delay 1ms
+0034   0008           00048         RETURN                  ; done
+                      00049 
+                      00050 ;---------------------------------------------------------------------------------------------  
+                      00051 ;       Send a command byte in two nibbles from RB4 - RB7
+                      00052 ;       Receives command in W, uses PulseE and Onems
+                      00053 ;---------------------------------------------------------------------------------------------  
+0035   00F5           00054 send    MOVWF   OutCod          ; Store output code
+0036   39F0           00055         ANDLW   0F0             ; Clear low nybble
+0037   0088           00056         MOVWF   PORTD           ; Output high nybble
+0038   18F4           00057         BTFSC   Select,RS       ; Test RS bit
+0039   1488           00058         BSF     PORTD,RS        ; and set for data
+003A   2030           00059         CALL    pulseE          ; and clock display register
+003B   2025           00060         CALL    onems           ; wait 1ms for display to complete
+                      00061 
+Message[305]: Using default destination of 1 (file).
+003C   0EF5           00062         SWAPF   OutCod          ; Swap low and high nybbles 
+003D   0875           00063         MOVF    OutCod,W        ; Retrieve output code
+003E   39F0           00064         ANDLW   0F0             ; Clear low nybble
+003F   0088           00065         MOVWF   PORTD           ; Output low nybble
+0040   18F4           00066         BTFSC   Select,RS       ; Test RS bit
+0041   1488           00067         BSF     PORTD,RS        ; and set for data
+0042   2030           00068         CALL    pulseE          ; and clock display register
+0043   2025           00069         CALL    onems           ; wait 1ms for display to complete
+0044   0008           00070         RETURN                  ; done
+                      00071 
+                      00072 ;---------------------------------------------------------------------------------------------  
+                      00073 ;       Initialise the display
+                      00074 ;       Uses Send
+                      00075 ;---------------------------------------------------------------------------------------------  
+0045   3064           00076 inid    MOVLW   D'100'          ; Load count for 100ms delay
+0046   202B           00077         CALL    xms             ; and wait for display start
+0047   30F0           00078         MOVLW   0F0             ; Mask for select code
+0048   00F4           00079         MOVWF   Select          ; High nybble not masked
+                      00080 
+0049   3030           00081         MOVLW   0x30            ; Load initial nibble
+004A   0088           00082         MOVWF   PORTD           ; and output it to display
+004B   2030           00083         CALL    pulseE          ; Latch initial code
+004C   3005           00084         MOVLW   D'5'            ; Set delay 5ms
+004D   202B           00085         CALL    xms             ; and wait
+004E   2030           00086         CALL    pulseE          ; Latch initial code again
+004F   2025           00087         CALL    onems           ; Wait 1ms
+0050   2030           00088         CALL    pulseE          ; Latch initial code again
+0051   1208           00089         BCF     PORTD,4         ; Set 4-bit mode
+0052   2030           00090         CALL    pulseE          ; Latch it
+                      00091         
+0053   3028           00092         MOVLW   0x28            ; Set 4-bit mode, 2 lines
+0054   2035           00093         CALL    send            ; and send code
+0055   3008           00094         MOVLW   0x08            ; Switch off display
+0056   2035           00095         CALL    send            ; and send code
+0057   3001           00096         MOVLW   0x01            ; Code to clear display
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0058   2035           00097         CALL    send            ; and send code
+0059   3006           00098         MOVLW   0x06            ; Enable cursor auto inc  
+005A   2035           00099         CALL    send            ; and send code
+005B   3080           00100         MOVLW   0x80            ; Zero display address
+005C   2035           00101         CALL    send            ; and send code
+005D   300C           00102         MOVLW   0x0C            ; Turn on display  
+005E   2035           00103         CALL    send            ; and send code
+                      00104 
+005F   0008           00105         RETURN                  ; Done
+                      00105 ; The main code for our progra
+0060                  00106 start:
+                      00107 
+0060   2066           00108         CALL RXCHECK ; the program will stay waiting in this function until he recive data.
+                      00109 
+0061                  00110 loop: ; loop will not enterd, it was for testing lines.
+0061   202B           00111         CALL xms
+0062   202B           00112         CALL xms
+0063   202B           00113         CALL xms
+0064   202B           00114         CALL xms
+0065   2861           00115         GOTO loop
+                      00116 
+                      00117 
+                      00118 
+0066                  00119 RXCHECK: ; to check if there is data coming from the PIC1.
+0066   1A8C           00120         BTFSC PIR1,5 ; check if the USART recive buffer is empty
+0067   206F           00121         CALL RECIVED ; if there is data coming then go to recived to read it and store it.
+0068   18A9           00122         BTFSC reciveTurn,1 ; to check if the PIC recived 2 times the most sign. shoot and the least.
+0069   2891           00123         GOTO Mul ; to check if the PIC recived 2 times: the num1 and num2 ones sign. then go multiply th
+                            em.
+006A   2866           00124         GOTO RXCHECK ; to check if the PIC recived 2 times the most sign. shoot and the least.
+006B   0008           00125         RETURN
+006C                  00126 TRANSMIT:
+006C   1E0C           00127         BTFSS PIR1,4
+006D   286C           00128         GOTO TRANSMIT
+006E   0008           00129         RETURN
+                      00130 
+006F                  00131 RECIVED: 
+006F   081A           00132         MOVF RCREG,0 ; Move the recived value from PIC1, 0: means mov it to the W register.
+0070   1829           00133         BTFSC reciveTurn,0 ;check if the recived is the num1 (first shoot).
+0071   2889           00134         GOTO secondNumCame ; if the recived is the num2 ones digit.
+0072   1429           00135         BSF reciveTurn,0 ; if the recived is the num1. then make this flag1 to recive the num2 ones
+0073   00A2           00136         MOVWF tensTemp ; this just to separate to review in the LCD
+0074   1103           00137         BCF STATUS,Z
+0075                  00138 num1Separate: ; separate the num1 into tens and ones to multiply it.
+0075   300A           00139         MOVLW D'10'
+Message[305]: Using default destination of 1 (file).
+0076   02A2           00140         SUBWF tensTemp 
+Message[305]: Using default destination of 1 (file).
+0077   0AA7           00141         INCF tenTimes  
+0078   1803           00142         BTFSC STATUS,C 
+0079   2875           00143         GOTO num1Separate  
+Message[305]: Using default destination of 1 (file).
+007A   07A2           00144         ADDWF tensTemp 
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[305]: Using default destination of 1 (file).
+007B   03A7           00145         DECF tenTimes 
+007C   0822           00146         MOVFW tensTemp 
+007D   00A8           00147         MOVWF onesTimes 
+007E   14F4           00148         BSF Select,RS 
+007F   0827           00149         MOVFW tenTimes
+0080   3E30           00150         ADDLW D'48' ; add the ascii to the ten digit of number1 to print it on the lcd.
+0081   2035           00151         CALL send
+0082   14F4           00152         BSF Select,RS
+0083   0828           00153         MOVFW onesTimes
+0084   3E30           00154         ADDLW D'48' ; add the ascii to the ones digit of number1 to print it on the lcd.
+0085   2035           00155         CALL send
+0086   3078           00156         MOVLW 'x' ; print x sign.
+0087   2035           00157         CALL send
+0088   288F           00158         GOTO ReturnFlag
+                      00159         
+                      00160 
+                      00161         ;----- second number came : 
+0089                  00162 secondNumCame:
+0089   00B0           00163         MOVWF onesTemp2
+008A   14F4           00164         BSF Select,RS 
+008B   0830           00165         MOVFW onesTemp2
+008C   3E30           00166         ADDLW D'48' ; add the ascii to print it on the lcd.
+008D   2035           00167         CALL send       
+008E   14A9           00168         BSF reciveTurn,1 ; set this flag to tell that we recived all we need. go to multiply.
+                      00169 
+008F                  00170 ReturnFlag: 
+008F   128C           00171         BCF PIR1,5
+                      00172         
+0090   0008           00173         RETURN
+                      00174 
+                      00175 ;------------ Multiplication -----------------;
+                      00176 
+0091                  00177 Mul: 
+0091   0830           00178         MOVFW onesTemp2
+0092   00B4           00179         MOVWF onesTempT
+0093   1103           00180         BCF STATUS,Z
+                      00181 
+                      00182 ; first we will multiply the num1 ones by the num2 ones
+                      00183 ; and store the carry, then we will make the high 4 bits zeros 
+                      00184 ; to make it one digit ( in the least sig. reg) 
+0094   301F           00185         MOVLW D'31'
+0095   0628           00186         XORWF onesTimes,W
+0096   1903           00187         BTFSC STATUS, Z ; Check if Z flag is set (result is zero)
+0097   28AA           00188     GOTO  digitIsZero   ; If not zero, jump to notEqual
+                      00189         
+0098   0828           00190         MOVFW onesTimes
+0099   01A8           00191         CLRF onesTimes
+                      00192 
+009A                  00193 MulLoop: ; start the multiplication, starting by multiply num1 ones digit by num2 ones digit.
+009A   07A8           00194         ADDWF onesTimes,F
+Message[305]: Using default destination of 1 (file).
+009B   0BB4           00195         DECFSZ onesTempT;20
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+009C   289A           00196         GOTO MulLoop
+009D   0828           00197         MOVFW onesTimes
+                      00198         
+009E                  00199 CARRYLOOP ; this to extract the carry if there is carry.
+009E   300A           00200         MOVLW D'10'
+009F   02A8           00201         SUBWF onesTimes,F
+00A0   1C03           00202         BTFSS STATUS,C
+00A1   28A4           00203         GOTO DIGIT
+Message[305]: Using default destination of 1 (file).
+00A2   0AB1           00204         INCF CarryCount
+00A3   289E           00205         GOTO CARRYLOOP
+00A4                  00206 DIGIT
+                      00207 ;TO REMOVE -ONETIMES
+00A4   0828           00208         MOVFW onesTimes
+00A5   3E0A           00209         ADDLW D'10'
+00A6   00A8           00210         MOVWF onesTimes
+00A7   0828           00211         MOVFW onesTimes
+00A8   00B3           00212         MOVWF ResultL ; the final ones digit of PIC2 stored here.
+00A9   28AC           00213         goto tenLoop
+                      00214         
+                      00215 
+                      00216 ;--- if the ones digit of the first number is zero the mul result
+                      00217 ;--- for the LOW SIG. REG will be zero without doing the mul.
+00AA                  00218 digitIsZero:
+00AA   01A8           00219         CLRF onesTimes
+00AB   01B1           00220         CLRF CarryCount
+                      00221 
+                      00222 
+                      00223 
+                      00224 ;-- we must make it go to the tens* 2nd number one.
+00AC                  00225 tenLoop
+00AC   01B2           00226         CLRF ResultH
+00AD   0827           00227         MOVFW tenTimes
+                      00228 
+                      00229         
+00AE                  00230 MulLoopTen:
+00AE   0827           00231         MOVFW tenTimes
+00AF   07B2           00232         ADDWF ResultH,F
+00B0   0832           00233         MOVFW ResultH
+00B1   0BB0           00234         DECFSZ onesTemp2,F
+00B2   28AE           00235         GOTO MulLoopTen
+00B3   0831           00236         MOVFW CarryCount
+00B4   07B2           00237         ADDWF ResultH,F
+00B5   28C5           00238         GOTO SEP ; go to separate it to print it on the lcd to check if the result corret.
+                      00239 
+                      00240 
+00B6                  00241 PRINT ; this will print the ones digit, since the hundred and tens will be printed below in the separate
+                             function. 
+00B6   14F4           00242         BSF Select,RS
+00B7   0833           00243         MOVFW ResultL ;ONES
+00B8   0099           00244         MOVWF TXREG ; here the ones digit of the mull (second shoot) will be sent to the PIC1
+00B9   206C           00245         CALL TRANSMIT
+00BA   0833           00246         MOVFW ResultL ; here will be printed to the lcd.
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00BB   3E30           00247         ADDLW D'48'
+00BC   2035           00248         CALL send
+00BD   202B           00249         CALL xms
+00BE   202B           00250         CALL xms
+00BF   202B           00251         CALL xms
+00C0   202B           00252         CALL xms
+00C1   202B           00253         CALL xms 
+00C2   202B           00254         CALL xms
+00C3   2801           00255         GOTO init ; the result of mul PIC2 will be printed for some time and the pic will
+                      00256                           ; start to configure its registers and clear the lcd to be ready for another o
+                            peration.
+                      00257 
+                      00258 
+                      00259 
+00C4   0008           00260         return
+                      00261 
+                      00262 
+                      00263 ;------------------------------------------------       
+00C5                  00264 SEP ; separating the Most Signeficant 2 bits to print them on the lcd.
+00C5   01A7           00265         CLRF tenTimes
+00C6   01A8           00266         CLRF onesTimes
+00C7   01A2           00267         CLRF tensTemp
+00C8   1003           00268         BCF STATUS,C
+00C9   0832           00269         MOVFW ResultH ; most 2 sig. bits of mul result.
+00CA   0099           00270         MOVWF TXREG ; here the first shoot that contains the result 2 most sign. bits will be sent to th
+                            e PIC2
+00CB   206C           00271         CALL TRANSMIT
+00CC   0832           00272         MOVFW ResultH
+00CD   00A2           00273         MOVWF tensTemp
+00CE   1403           00274         BSF STATUS,C
+00CF                  00275 num1Separate2:
+00CF   300A           00276         MOVLW D'10'
+Message[305]: Using default destination of 1 (file).
+00D0   02A2           00277         SUBWF tensTemp
+Message[305]: Using default destination of 1 (file).
+00D1   0AA7           00278         INCF tenTimes  
+00D2   1803           00279         BTFSC STATUS,C 
+00D3   28CF           00280         GOTO num1Separate2 
+Message[305]: Using default destination of 1 (file).
+00D4   07A2           00281         ADDWF tensTemp 
+Message[305]: Using default destination of 1 (file).
+00D5   03A7           00282         DECF tenTimes 
+00D6   0822           00283         MOVFW tensTemp 
+00D7   00A8           00284         MOVWF onesTimes
+00D8   14F4           00285         BSF Select,RS 
+00D9   303D           00286         MOVLW '='
+00DA   2035           00287         CALL send
+00DB   0827           00288         MOVFW tenTimes ;HUNS
+00DC   3E30           00289         ADDLW D'48'
+00DD   2035           00290         CALL send
+00DE   14F4           00291         BSF Select,RS
+00DF   0828           00292         MOVFW onesTimes;TENS
+00E0   3E30           00293         ADDLW D'48'
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00E1   2035           00294         CALL send
+00E2   20B6           00295         CALL PRINT
+                      00296 ;---------------------------- The END of the Co-Processor of Simple Calculator ----------------------
+                      00297 
+                      00298         END
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CARRYLOOP                         0000009E
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+CarryCount                        00000031
+CarryCount2                       00000036
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DIGIT                             000000A4
+D_A                               00000005
+E                                 00000002
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+Mul                               00000091
+MulLoop                           0000009A
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+MulLoopTen                        000000AE
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+Number1                           00000035
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+OutCod                            00000075
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PRINT                             000000B6
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+Point                             00000073
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RECIVED                           0000006F
+RP0                               00000005
+RP1                               00000006
+RS                                00000001
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+RXCHECK                           00000066
+R_W                               00000002
+ResultH                           00000032
+ResultL                           00000033
+ReturnFlag                        0000008F
+S                                 00000003
+SEN                               00000000
+SEP                               000000C5
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+Select                            00000074
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRANSMIT                          0000006C
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+Timer1                            00000070
+TimerX                            00000071
+UA                                00000001
+Var                               00000072
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+digitIsZero                       000000AA
+inid                              00000045
+init                              00000001
+loop                              00000061
+loop1                             00000027
+loopX                             0000002C
+num1Separate                      00000075
+num1Separate2                     000000CF
+onems                             00000025
+onesTemp2                         00000030
+onesTempT                         00000034
+onesTimes                         00000028
+pulseE                            00000030
+reciveTurn                        00000029
+secondNumCame                     00000089
+send                              00000035
+start                             00000060
+tenLoop                           000000AC
+tenTimes                          00000027
+tensTemp                          00000022
+xms                               0000002B
+MPASM  5.50                         SLAVE.ASM   2-15-2024  18:34:58         PAGE 16
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXX------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   227
+Program Memory Words Free:  7965
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :    18 reported,     0 suppressed
+
+
