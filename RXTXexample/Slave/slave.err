@@ -1,9 +1,0 @@
-Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 25 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 35 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 36 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\LCDIS.INC 27 : Using default destination of 1 (file).
-Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\LCDIS.INC 37 : Using default destination of 1 (file).
-Message[305] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\LCDIS.INC 62 : Using default destination of 1 (file).
-Warning[205] D:\BZU\REAL TIME\RXTXEXAMPLE\SLAVE\SLAVE.ASM 121 : Found directive in column 1. (END)
